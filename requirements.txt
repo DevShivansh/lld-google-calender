@@ -1,0 +1,16 @@
+Use cases
+
+create a meeting
+
+add participants
+
+view calender of person (permission restricted)
+
+
+create reminder (only creater has access to do this)
+
+
+notifications to all participants
+
+
+meeting can only be created by members
