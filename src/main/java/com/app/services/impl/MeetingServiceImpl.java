@@ -58,6 +58,7 @@ public class MeetingServiceImpl implements MeetingService{
 		userService.updateUsersRequiredInMeeting(m);
 		
 		notificationService.notify(NotificationType.MEETING_INVITE, m);
+		notificationService.notify(NotificationType.REMINDER, m);
 		
 		return m;
 	}

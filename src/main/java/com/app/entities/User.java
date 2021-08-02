@@ -3,10 +3,10 @@ package com.app.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import com.app.entities.permission.ViewPermission;
 import com.app.enums.Meeting;
 import com.app.enums.UserType;
-import com.app.enums.ViewPermission;
+import com.app.exceptions.AccessDenied;
 
 public abstract class User implements MeetingMember{
 
@@ -24,8 +24,10 @@ public abstract class User implements MeetingMember{
 	
 	private List<Notification> notifications;
 	
+	private ViewPermission viewPermission;
 	
-	public User(String userName, String emailID) {
+	
+	public User(String userName, String emailID, ViewPermission viewPermission) {
 		super();
 		this.userID = globalID++;
 		this.userName = userName;
@@ -33,11 +35,14 @@ public abstract class User implements MeetingMember{
 		meetings = new ArrayList<Meeting>();
 		invites = new ArrayList<Meeting>();
 		notifications = new ArrayList<Notification>();
+		this.viewPermission = viewPermission;
 	}
 
 	public abstract UserType getUserType();
 	
-	public abstract ViewPermission getViewPermission();
+	public boolean isViewCalenderAccessable(User otherUser) {
+		return viewPermission.hasPermission(otherUser);
+	}
 
 	@Override
 	public Long getUserID() {
@@ -78,6 +83,13 @@ public abstract class User implements MeetingMember{
 
 	public void addNotification(Notification n) {
 		notifications.add(n);
+	}
+	
+	public Calender getCalender(User requestingUser) {
+		if(!isViewCalenderAccessable(requestingUser))
+			throw new AccessDenied();
+		Calender c = new Calender(this);
+		return c;
 	}
 	
 }
